@@ -1,0 +1,18 @@
+[project]
+name = "nvidia-analysis"
+version = "0.1.0"
+description = "Time-series analysis of NVIDIA stock prices with statistical methods"
+authors = [
+    {name = "Your Name"}
+]
+dependencies = [
+    "pandas",
+    "numpy",
+    "matplotlib",
+    "scipy",
+    "statsmodels"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

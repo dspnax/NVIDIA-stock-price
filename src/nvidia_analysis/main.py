@@ -2,12 +2,12 @@ import argparse
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from data_loader import load_stock_data
-from returns import compute_log_returns
-from volatility import rolling_volatility
-from statistics import normality_test, stationarity_test
-from config import WINDOW_SIZE, DATA_PATH, OUTPUT_PATH
-from logger import setup_logger
+from nvidia_analysis.data_loader import load_stock_data
+from nvidia_analysis.returns import compute_log_returns
+from nvidia_analysis.volatility import rolling_volatility
+from nvidia_analysis.statistics import normality_test, stationarity_test
+from nvidia_analysis.config import WINDOW_SIZE, DATA_PATH, OUTPUT_PATH
+from nvidia_analysis.logger import setup_logger
 
 
 def run_pipeline(plot: bool = False, save: bool = False):

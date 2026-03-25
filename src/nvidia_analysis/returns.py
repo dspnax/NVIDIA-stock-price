@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def log_returns(price_series: pd.Series) -> pd.Series:
+def compute_log_returns(price_series: pd.Series) -> pd.Series:
     """
     Compute log-returns to ensure time additivity and variance stability.
     """
