@@ -40,17 +40,6 @@ pip install -r requirements.txt
 python -m nvidia_analysis.main --plot --save
 ```
 
-## Project Structure
-
-```
-src/nvidia_analysis/
-    data_loader.py
-    returns.py
-    volatility.py
-    statistics.py
-    main.py
-```
-
 ## Methodology
 
 We transform raw prices into log-returns to ensure:
