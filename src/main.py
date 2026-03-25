@@ -1,47 +1,71 @@
+import argparse
+import pandas as pd
 import matplotlib.pyplot as plt
 
 from data_loader import load_stock_data
 from returns import compute_log_returns
 from volatility import rolling_volatility
 from statistics import normality_test, stationarity_test
+from config import WINDOW_SIZE, DATA_PATH, OUTPUT_PATH
+from logger import setup_logger
 
 
-def main():
+def run_pipeline(plot: bool = False, save: bool = False):
+    logger = setup_logger()
+    logger.info("Starting pipeline...")
+
     # Load data
-    df = load_stock_data("../data/raw/NVIDIA_Stock_Price.csv")
+    df = load_stock_data(DATA_PATH)
+    logger.info("Data loaded")
 
-    # Compute log-returns
+    # Compute returns
     returns = compute_log_returns(df["Price"])
     df = df.loc[returns.index]
     df["Log Return"] = returns
+    logger.info("Log returns computed")
 
-    # Compute volatility
-    df["Volatility_30d"] = rolling_volatility(df["Log Return"], window=30)
+    # Volatility
+    df["Volatility"] = rolling_volatility(df["Log Return"], WINDOW_SIZE)
+    logger.info("Volatility computed")
 
-    # Statistical tests
+    # Stats
     p_norm = normality_test(df["Log Return"])
     p_adf = stationarity_test(df["Log Return"])
 
-    print("Statistical Tests")
-    print("-----------------")
-    print(f"Normality p-value: {p_norm:.6f}")
-    print(f"Stationarity (ADF) p-value: {p_adf:.6f}")
+    logger.info(f"Normality p-value: {p_norm:.6f}")
+    logger.info(f"ADF p-value: {p_adf:.6f}")
 
-    # Plot price
-    plt.figure(figsize=(12, 6))
-    plt.plot(df.index, df["Price"], label="NVIDIA Price")
-    plt.title("NVIDIA Stock Price")
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+    # Save results
+    if save:
+        df.to_csv(OUTPUT_PATH)
+        logger.info(f"Results saved to {OUTPUT_PATH}")
 
-    # Plot volatility
-    plt.figure(figsize=(12, 4))
-    plt.plot(df.index, df["Volatility_30d"], label="30-day Volatility")
-    plt.title("Rolling Volatility of Log Returns")
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+    # Plot
+    if plot:
+        plt.figure()
+        plt.plot(df["Price"])
+        plt.title("Price")
+        plt.grid()
+
+        plt.figure()
+        plt.plot(df["Volatility"])
+        plt.title("Volatility")
+        plt.grid()
+
+        plt.show()
+
+    logger.info("Pipeline completed")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="NVIDIA Stock Analysis CLI")
+
+    parser.add_argument("--plot", action="store_true", help="Show plots")
+    parser.add_argument("--save", action="store_true", help="Save results")
+
+    args = parser.parse_args()
+
+    run_pipeline(plot=args.plot, save=args.save)
 
 
 if __name__ == "__main__":
