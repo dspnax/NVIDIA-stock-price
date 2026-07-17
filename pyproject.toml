@@ -3,7 +3,7 @@ name = "nvidia-analysis"
 version = "0.1.0"
 description = "Time-series analysis of NVIDIA stock prices with statistical methods"
 authors = [
-    {name = "Your Name"}
+    {name = "dspnax"}
 ]
 dependencies = [
     "pandas",
